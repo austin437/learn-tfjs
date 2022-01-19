@@ -19,5 +19,8 @@
     "TensorFlow.js"
   ],
   "author": "Gant Laborde",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "browserslist": [
+    "last 1 Chrome version"
+  ]
 }
