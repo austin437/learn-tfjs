@@ -50,6 +50,7 @@
 
         // Let's make them pretty
         const top_user_features = tf.topk(user_feats, features.length)
+        console.log(top_user_features.indices.arraySync());
         // Back to JavaScript
         const top_genres = top_user_features.indices.arraySync()
         // print the results
