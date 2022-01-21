@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
+        
+    </head>
+    <body>
+        <canvas style='border: 1px solid black;' id="randomness"></canvas>
+        <script>
+            (async ()=>{
+                console.log('browser: tensor-to-image')
+
+                const bigMess = tf.randomUniform([400, 600, 3])
+                const myCanvas = document.getElementById("randomness")
+                console.log(myCanvas)
+                await tf.browser.toPixels(bigMess, myCanvas)
+                bigMess.dispose()
+
+            })()
+        </script>
+    </body>
+</html>
