@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
+    </head>
+    <body>
+        <h1>Create random grayscale image</h1>
+        <canvas id='grayscale-random'></canvas>
+        <h1>Grayscale organised by width</h1>
+        <canvas id='grayscale-sorted'></canvas>
+
+        <script type='text/javascript'>
+            window.addEventListener('load', async ()=>{
+                console.log('window loaded') 
+
+                const grayscaleRandomCanvas = document.getElementById('grayscale-random');
+                const bigMess = tf.randomUniform([400, 400]);
+                await tf.browser.toPixels(bigMess, grayscaleRandomCanvas)
+
+                const grayscaleSortedCanvas = document.getElementById('grayscale-sorted')
+                const sorted = tf.topk(bigMess, 400).values;
+                await tf.browser.toPixels(sorted, grayscaleSortedCanvas)
+
+                bigMess.dispose();
+                sorted.dispose();
+            
+            })
+        </script>
+
+    </body>
+</html>
