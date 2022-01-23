@@ -9,6 +9,7 @@
             <!-- NOTE: styles were modified post-print to fix issues with rendering at small viewports widths -->
             <img id="pet" src="./dog1.jpg" width="100%" />
             <canvas id="detectionCanvas" style="position: absolute; left: 0"></canvas>
+            <canvas id="croppedCanvas" style="position: absolute; bottom: -200px; left: 0; border: 1px solid black"></canvas>
         </div>
 
         <script>
@@ -17,6 +18,11 @@
                 tf.tidy(() => {
                     tf.loadLayersModel(modelPath).then((model) => {
                         const petImage = document.getElementById("pet");
+                        const imgWidth = petImage.width;
+                        const imgHeight = petImage.height;
+
+                        const detectionCanvas = document.getElementById("detectionCanvas");
+
                         const myTensor = tf.browser.fromPixels(petImage);
                         // Model expects 256x256 0-1 value 3D tensor
                         const readyfied = tf.image.resizeNearestNeighbor(myTensor, [256, 256], true).div(255).reshape([1, 256, 256, 3]);
@@ -26,13 +32,10 @@
                         result.print();
 
                         // Draw box on canvas
-                        const detectionCanvas = document.getElementById("detectionCanvas");
-                        const imgWidth = petImage.width;
-                        const imgHeight = petImage.height;
                         detectionCanvas.width = imgWidth;
                         detectionCanvas.height = imgHeight;
                         const box = result.dataSync();
-                        console.log('box', box);
+                        console.log("box", box);
                         const startX = box[0] * imgWidth;
                         const startY = box[1] * imgHeight;
                         const width = (box[2] - box[0]) * imgWidth;
@@ -40,7 +43,25 @@
                         const ctx = detectionCanvas.getContext("2d");
                         ctx.strokeStyle = "#0F0";
                         ctx.lineWidth = 4;
-                        ctx.strokeRect(startX, startY, width, height);
+                        ctx.strokeRect(startX, startY, width, height);           
+                        
+
+                        // crop image
+                        const startingPoint = [startY, startX, 0];
+                        const newSize = [parseInt(height), parseInt(width), 3];
+
+                        const croppedCanvas = document.getElementById("croppedCanvas");
+
+                        const cropped = tf.slice(myTensor, startingPoint, newSize);
+                        tf.browser.toPixels(cropped, croppedCanvas).then(() => {
+                            cropped.dispose();
+                        });
+
+                        const newReadyfied = tf.image.resizeBilinear(cropped, [96, 96], true).div(255).reshape([1, 96, 96, 3])
+
+                        console.log(newReadyfied.shape)
+
+                      
                     });
                 });
             });

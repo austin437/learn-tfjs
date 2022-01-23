@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
+    </head>
+    <body>
+        <h1>Playground</h1>
+
+        <canvas id="myCanvas"></canvas>
+
+        <script type="text/javascript">
+            window.addEventListener("load", async () => {
+                console.log("window loaded");
+
+                const myCan = document.getElementById("myCanvas");
+
+                const randomTen = tf.randomUniform([400, 400]);
+
+                await tf.browser.toPixels(randomTen, myCan)
+
+                const sortedTen = tf.topk(randomTen, 400)
+
+                tf.fill([100,50,1], 0.2).print();
+
+                await tf.browser.toPixels(tf.fill([100,50,3], 0.5), myCan)
+            });
+        </script>
+    </body>
+</html>
