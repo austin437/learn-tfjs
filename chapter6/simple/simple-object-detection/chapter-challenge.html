@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js"></script>
-  </head>
-  <body>
-    <h1>Console Log for Result</h1>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js"></script>
+    </head>
+    <body>
+        <h1>Console Log for Result</h1>
 
-    <script type="module">
-      tf.ready().then(() => {
-        const t = tf.tensor([
-          [
-            [1, 2, 3, 4, 5],
-            [1.1, 2.1, 3.1, 4.1, 5.1],
-            [1.2, 2.2, 3.2, 4.2, 5.2],
-            [1.2, 12.2, 3.2, 4.2, 5.2],
-            [1.3, 2.3, 3.3, 4.3, 5.3],
-            [1, 1, 1, 1, 1]
-          ],
-        ]);
+        <script type="module">
+            tf.ready().then(() => {
+                const t = tf.tensor([
+                    [
+                        [1, 2, 3, 4, 5],
+                        [1.1, 2.1, 3.1, 4.1, 5.1],
+                        [1.2, 2.2, 3.2, 4.2, 5.2],
+                        [1.2, 12.2, 3.2, 4.2, 5.2],
+                        [1.3, 2.3, 3.3, 4.3, 5.3],
+                        [1, 1, 1, 1, 1],
+                    ],
+                ]);
 
-        console.log(t.shape)
+                // Verbose way to get [3, 4, 2]
 
-        const {values, indices} = tf.topk(t, 3);
+                const myTensor = tf.tensor(
+                    tf
+                        .topk(t, 3)
+                        .values.arraySync()
+                        .flat()
+                        .map((x) => x[0])
+                );
 
-        console.log('indices', indices.arraySync());
-        console.log('values', values.arraySync());
+                const topthree = tf.topk(myTensor, 3);
 
-        
+                console.log(topthree.indices.arraySync());
 
-      });
-    </script>
-  </body>
+                // Succinct way to get [3, 4, 2]
+
+                const {indices, values} = tf.topk(t);
+                tf.topk(values.squeeze(), 3).indices.print()
+            });
+        </script>
+    </body>
 </html>
