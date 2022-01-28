@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@tensorflow/tfjs-node": "^2.7.0",
-    "danfojs-node": "^0.1.6"
+    "danfojs-node": "^0.1.6",
+    "dnotebook": "^0.1.1"
   }
 }
